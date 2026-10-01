@@ -1,0 +1,11 @@
+{
+  "name": "locro-roi-calculator",
+  "version": "1.0.0",
+  "description": "Compound loss / ROI calculator from the Locro landing page",
+  "license": "MIT",
+  "scripts": {
+    "css": "tailwindcss -i input.css -o styles.css --minify",
+    "test": "node test.js"
+  },
+  "devDependencies": { "tailwindcss": "^3.4.0" }
+}

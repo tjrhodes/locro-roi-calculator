@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Locro — compound loss calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-white text-slate-900 font-sans antialiased">
+    <!-- ============================================================
+         SECTION 5b — COMPOUND LOSS CALCULATOR  (id="calc")
+         Both "Calculate your savings" buttons higher up point here.
+         Two inputs, everything else pre-filled. The arithmetic runs
+         in src/calc.js — nothing is sent anywhere, nothing stored.
+         The model: revenue × error-rate = annual loss; Locro recovers
+         a share of it; a slice of each year's loss is lasting damage
+         (a client who doesn't come back) and carries into later
+         years — that carry-forward is what makes the totals compound.
+         ============================================================ -->
+    <section class="py-20 md:py-28">
+      <div class="mx-auto max-w-6xl px-6">
+
+        <!-- The anchor sits on the heading block, not the section, so a
+             jump from "Calculate your savings" lands with the title near
+             the top of the screen rather than 80px of section padding. -->
+        <div id="calc" class="max-w-3xl scroll-mt-8">
+          <h2 class="text-3xl md:text-4xl font-heading font-bold tracking-tight">How Much Could Locro Save You?</h2>
+          <p class="mt-6 text-lg text-slate-600 leading-relaxed">
+            If errors happen in your centre, it is reasonable to expect Locro to reduce them.
+            Locro is bespoke software created by examiners in tandem with programmers to
+            solve the persistent issues that arise.
+          </p>
+          <p class="mt-4 text-lg text-slate-600 leading-relaxed">
+            A conservative estimate is a <strong class="font-semibold text-slate-900">60% reduction</strong>
+            in staff no-shows, late arrivals, delays, lost hours and wrong addresses. When logistics
+            don&rsquo;t run smoothly it costs your business in reputation and referrals &mdash; an error
+            may even cost you an important client.
+          </p>
+          <p class="mt-4 text-lg text-slate-600 leading-relaxed">
+            These human errors compound over time into a significant sum. The calculator below
+            gives you an idea of how valuable Locro could be for your organisation.
+          </p>
+          <!-- Phones only: three paragraphs fill the screen and the card
+               is out of sight below, so give people a reason to scroll. -->
+          <a href="#calc-card" class="md:hidden mt-6 inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700 transition-colors">
+            Try it with your own figures
+            <svg class="size-5 motion-safe:animate-bounce" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z" clip-rule="evenodd" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- The card. Inputs left, results right; stacked on phones.
+             `md:grid-cols-5` with 2/3 split gives the results the
+             wider column — they carry the bigger type. -->
+        <div id="calc-card" class="mt-12 scroll-mt-6 rounded-2xl ring-1 ring-slate-200 bg-white shadow-sm overflow-hidden grid md:grid-cols-5">
+
+          <!-- INPUTS -->
+          <form id="calc-form" class="p-6 sm:p-8 md:col-span-2 space-y-6" novalidate>
+
+            <p class="text-sm text-slate-500 leading-relaxed">
+              No sign-up, nothing stored &mdash; the sums happen in your browser.
+              We&rsquo;ve filled in typical figures; change anything that doesn&rsquo;t match you.
+            </p>
+
+            <div>
+              <label for="calc-revenue" class="block font-medium text-slate-900">Estimated annual exam revenue</label>
+              <p class="mt-1 text-sm text-slate-500">Total fees from all your exam sessions in a year.</p>
+              <div class="mt-2 flex items-center rounded-lg border border-slate-300 focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+                <span class="pl-3 text-slate-500 select-none">&euro;</span>
+                <input id="calc-revenue" name="revenue" type="number" inputmode="numeric" min="0" step="1000" value="250000"
+                       class="w-full bg-transparent px-2 py-2 focus:outline-none" />
+              </div>
+            </div>
+
+            <div>
+              <label for="calc-error" class="block font-medium text-slate-900">Cost of errors, as a share of revenue</label>
+              <p class="mt-1 text-sm text-slate-500">
+                No-shows, late arrivals, wrong venues, lost hours, overtime, the client who quietly
+                didn&rsquo;t come back. 1.5% is a cautious starting point.
+              </p>
+              <div class="mt-2 flex items-center rounded-lg border border-slate-300 focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+                <input id="calc-error" name="error" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="1.5"
+                       class="w-full bg-transparent px-3 py-2 focus:outline-none" />
+                <span class="pr-3 text-slate-500 select-none whitespace-nowrap">% a year</span>
+              </div>
+            </div>
+
+            <div>
+              <span class="block font-medium text-slate-900">Staff and candidate wellbeing</span>
+              <p class="mt-1 text-sm text-slate-500">Calm venues, staff who know where to be, candidates who can concentrate.</p>
+              <div class="mt-2 flex items-center rounded-lg border border-dashed border-slate-300 bg-slate-50 px-3 py-2 text-slate-700 font-medium">
+                Priceless
+              </div>
+            </div>
+
+            <!-- The two model constants, folded away. Adjustable so a
+                 sceptic can zero either one and watch what happens. -->
+            <details class="group text-sm">
+              <summary class="cursor-pointer select-none text-slate-500 hover:text-slate-700 transition-colors">
+                <span class="underline decoration-dotted underline-offset-4">Assumptions</span>
+                <span class="text-slate-400">&mdash; Locro prevents <span data-out="reduction">60</span>% of errors; <span data-out="carry">10</span>% of each year&rsquo;s loss is lasting</span>
+              </summary>
+              <div class="mt-4 grid grid-cols-2 gap-4">
+                <div>
+                  <label for="calc-reduction" class="block text-slate-700">Errors Locro prevents</label>
+                  <div class="mt-1 flex items-center rounded-lg border border-slate-300 focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+                    <input id="calc-reduction" name="reduction" type="number" inputmode="numeric" min="0" max="100" step="5" value="60"
+                           class="w-full bg-transparent px-3 py-1.5 focus:outline-none" />
+                    <span class="pr-3 text-slate-500 select-none">%</span>
+                  </div>
+                </div>
+                <div>
+                  <label for="calc-carry" class="block text-slate-700">Loss that carries forward</label>
+                  <div class="mt-1 flex items-center rounded-lg border border-slate-300 focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+                    <input id="calc-carry" name="carry" type="number" inputmode="numeric" min="0" max="100" step="5" value="10"
+                           class="w-full bg-transparent px-3 py-1.5 focus:outline-none" />
+                    <span class="pr-3 text-slate-500 select-none">%</span>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 text-slate-500 leading-relaxed">
+                Some losses don&rsquo;t reset in January &mdash; a client lost this year is still
+                lost next year. The carry-forward is the share of each year&rsquo;s loss treated as lasting.
+              </p>
+            </details>
+
+          </form>
+
+          <!-- RESULTS -->
+          <div class="bg-slate-50 border-t md:border-t-0 md:border-l border-slate-200 p-6 sm:p-8 md:col-span-3 flex flex-col">
+
+            <p class="text-sm font-medium text-slate-500 uppercase tracking-wide">Conservative estimate</p>
+            <p class="mt-3 text-slate-600 leading-relaxed">
+              Errors are costing you around
+              <strong class="font-semibold text-slate-900" data-out="gross">&mdash;</strong> a year.
+              Locro could recover
+            </p>
+            <p class="mt-1 text-4xl md:text-5xl font-heading font-bold tracking-tight text-slate-900">
+              <span data-out="annual">&mdash;</span><span class="text-2xl md:text-3xl text-slate-500 font-sans font-normal"> a year</span>
+            </p>
+
+            <p class="mt-8 text-sm font-medium text-slate-500 uppercase tracking-wide">Over time, because lost clients stay lost</p>
+            <!-- Rows on phones (label left, figure right), three-up from
+                 `sm:`. Three tiles side by side at 400px can't hold a
+                 five-figure euro amount without wrapping. -->
+            <dl class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div class="rounded-xl bg-white ring-1 ring-slate-200 p-4 flex items-baseline justify-between sm:block">
+                <dt class="text-sm text-slate-500">3 years</dt>
+                <dd class="sm:mt-1 text-xl sm:text-2xl font-heading font-bold tracking-tight tabular-nums whitespace-nowrap text-slate-900" data-out="y3">&mdash;</dd>
+              </div>
+              <div class="rounded-xl bg-white ring-1 ring-slate-200 p-4 flex items-baseline justify-between sm:block">
+                <dt class="text-sm text-slate-500">5 years</dt>
+                <dd class="sm:mt-1 text-xl sm:text-2xl font-heading font-bold tracking-tight tabular-nums whitespace-nowrap text-slate-900" data-out="y5">&mdash;</dd>
+              </div>
+              <div class="rounded-xl bg-blue-600 text-white p-4 flex items-baseline justify-between sm:block">
+                <dt class="text-sm text-blue-100">10 years</dt>
+                <dd class="sm:mt-1 text-xl sm:text-2xl font-heading font-bold tracking-tight tabular-nums whitespace-nowrap" data-out="y10">&mdash;</dd>
+              </div>
+            </dl>
+
+            <p class="mt-4 text-sm text-slate-500 leading-relaxed">
+              Wellbeing not included &mdash; we couldn&rsquo;t find a number big enough.
+            </p>
+
+            <!-- The sum, shown. A number the visitor can follow is a
+                 number they'll defend; one we assert is not. -->
+            <p class="mt-6 text-sm text-slate-500 leading-relaxed" data-out="working"></p>
+
+            <div class="mt-auto pt-8 flex flex-col sm:flex-row gap-3">
+              <a href="https://locro.it" data-trial-cta class="text-center bg-blue-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">Start your free trial</a>
+              <a href="https://locro.it" class="text-center border border-slate-300 hover:bg-white transition-colors font-medium px-6 py-3 rounded-lg">Book a 20-minute walkthrough</a>
+            </div>
+            <p class="mt-4 text-xs text-slate-500 leading-relaxed">
+              An estimate built from your own figures, not a quotation. Figures are rounded down.
+            </p>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+  <script src="calc.js"></script>
+</body>
+</html>
